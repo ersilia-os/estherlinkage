@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import StratifiedShuffleSplit
 
 
@@ -7,9 +8,9 @@ COLUMNS = ["src_idx", "trg_idx"]
 
 class Split(object):
 
-    def __init__(self, test_size=0.2):
-        self.test_size = test_size
-        self.splits = StratifiedShuffleSplit(n_splits=1, test_size=self.test_size)
+    def __init__(self, train_size):
+        self.train_size = train_size
+        self.splits = StratifiedShuffleSplit(n_splits=1, train_size=self.train_size)
 
     def _binarize(self, pairs, truth):
         src_set = set()
@@ -37,7 +38,7 @@ class Split(object):
             else:
                 idxs += [i]
         y_ = [y[i] for i in idxs]
-        for train_idx, valid_idx in self.splits(y_, y_):
+        for train_idx, valid_idx in self.splits.split(y_, y_):
             pass
         train_idx = [idxs[i] for i in train_idx]
         valid_idx = [idxs[i] for i in valid_idx]
@@ -46,11 +47,15 @@ class Split(object):
         test_idx = np.array(test_idx, dtype=np.int)
         return train_idx, valid_idx, test_idx
 
-    def split(self, pairs, truth):
+    def split(self, features, truth):
+        pairs = features.index
+        pairs = pd.DataFrame(np.array(pairs.to_frame(), dtype=np.int), columns=COLUMNS)
         y = self._binarize(pairs, truth)
         train_idx, valid_idx, test_idx = self._split(y)
         result = {
+            "pairs": pairs,
             "y": y,
+            "X": np.array(features),
             "train_idx": train_idx,
             "valid_idx": valid_idx,
             "test_idx": test_idx
