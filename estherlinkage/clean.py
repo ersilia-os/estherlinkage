@@ -11,7 +11,6 @@ class Clean(object):
         vals = []
         for date in list(series):
             date = str(date)
-            print(date)
             if date[-3] == "/":
                 d, m, y = date.split("/")
                 y = int(y)

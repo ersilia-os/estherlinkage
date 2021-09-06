@@ -53,7 +53,7 @@ class Split(object):
         y = self._binarize(pairs, truth)
         train_idx, valid_idx, test_idx = self._split(y)
         result = {
-            "pairs": pairs,
+            "pairs": np.array(pairs, dtype=np.int),
             "y": y,
             "X": np.array(features),
             "train_idx": train_idx,
