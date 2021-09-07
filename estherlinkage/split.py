@@ -33,8 +33,8 @@ class Split(object):
         idxs = []
         test_idx = []
         for i, v in enumerate(y):
-            if i == -1:
-                test_idx = [i]
+            if v == -1:
+                test_idx += [i]
             else:
                 idxs += [i]
         y_ = [y[i] for i in idxs]

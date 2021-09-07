@@ -7,6 +7,16 @@ class Clean(object):
     def __init__(self):
         pass
 
+    def string(self, series):
+        vals = []
+        for s in list(series):
+            s = str(s)
+            if s == "nan":
+                vals += [None]
+            else:
+                vals += [s.lower()]
+        return vals
+
     def date(self, series):
         vals = []
         for date in list(series):
